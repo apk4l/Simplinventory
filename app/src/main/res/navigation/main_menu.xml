@@ -6,4 +6,10 @@
     <item
         android:id="@+id/menu_history"
         android:title="Order History" />
+    <item
+    android:id="@+id/login"
+    android:title="Login" />
+    <item
+            android:id="@+id/new_user"
+            android:title="New User" />
 </menu>

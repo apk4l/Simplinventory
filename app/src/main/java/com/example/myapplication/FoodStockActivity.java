@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -110,14 +111,15 @@ public class FoodStockActivity extends AppCompatActivity {
     private static final int REQUIRED_GBUTTER = 2;
     private static final int REQUIRED_PORK = 2;
     private static final int REQUIRED_CORNMEAL = 1;
-    private static final int REQUIRED_PINEAPPLE = 2;
-    private static final int REQUIRED_PREP = 13;
-    private static final int PREP_PER_CASE = 12;
-    private static final int REQUIRED_LIDS = 12;
-    private static final int LIDS_PER_CASE = 10;
+    private static final int REQUIRED_PINEAPPLE = 1;
+    private static final int REQUIRED_PREP = 8;
+    private static final int PREP_PER_CASE = 7;
+    private static final int REQUIRED_LIDS = 8;
+    private static final int LIDS_PER_CASE = 7;
     private static final int REQUIRED_SANITABS = 1;
     private static final int REQUIRED_SEASONING = 2;
 
+    @SuppressLint("ResourceType")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.navigation.main_menu, menu);
@@ -133,6 +135,16 @@ public class FoodStockActivity extends AppCompatActivity {
             case R.id.menu_history:
                 // Handle "Order History" menu item click
                 Intent intent = new Intent(FoodStockActivity.this, OrderHistoryActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.login:
+                // Handle "Order History" menu item click
+                intent = new Intent(FoodStockActivity.this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.new_user:
+                // Handle "Order History" menu item click
+                intent = new Intent(FoodStockActivity.this, NewUserActivity.class);
                 startActivity(intent);
                 return true;
             default:

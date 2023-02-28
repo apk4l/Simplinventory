@@ -29,7 +29,24 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
+        <activity
+                android:name=".LoginActivity"
+                android:exported="false"
+                android:label="Login"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
+        <activity
+                android:name=".NewUserActivity"
+                android:exported="false"
+                android:label="New User"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
     </application>
 
 </manifest>
