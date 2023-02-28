@@ -46,7 +46,7 @@ public class NewUserActivity extends AppCompatActivity {
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userID = mUserIDEditText.getText().toString();
+                String username = mUserIDEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
                 String email = mEmailEditText.getText().toString();
                 String resetQuestion = mResetQuestionEditText.getText().toString();
@@ -86,7 +86,7 @@ public class NewUserActivity extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("userID", userID);
+                        params.put("username", username);
                         params.put("password", password);
                         params.put("email", email);
                         params.put("resetQuestion", resetQuestion);
