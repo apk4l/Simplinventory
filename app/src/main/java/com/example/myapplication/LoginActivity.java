@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Send login credentials to PHP script
                 String url = "https://kentzysk.com/androidinv/login.php";
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                StringRequest request = new StringRequest(Request.Method.GET, url,
+                StringRequest request = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

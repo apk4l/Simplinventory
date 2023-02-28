@@ -53,7 +53,7 @@ public class NewUserActivity extends AppCompatActivity {
                 String resetAnswer = mResetAnswerEditText.getText().toString();
 
                 // Send new user details to PHP script
-                String url = "http://kentzysk.com/androidinv/new_user.php";
+                String url = "https://kentzysk.com/androidinv/new_user.php";
                 RequestQueue queue = Volley.newRequestQueue(NewUserActivity.this);
                 StringRequest request = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
