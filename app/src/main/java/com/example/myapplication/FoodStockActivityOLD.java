@@ -15,8 +15,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -26,7 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class FoodStockActivity extends AppCompatActivity {
+public class FoodStockActivityOLD extends AppCompatActivity {
     private EditText mDoughEditText;
     private EditText mCheeseEditText;
     private EditText mSauceEditText;
@@ -60,17 +62,17 @@ public class FoodStockActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_history:
                 // Handle "Order History" menu item click
-                Intent intent = new Intent(FoodStockActivity.this, OrderHistoryActivity.class);
+                Intent intent = new Intent(FoodStockActivityOLD.this, OrderHistoryActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.login:
                 // Handle "Order History" menu item click
-                intent = new Intent(FoodStockActivity.this, LoginActivity.class);
+                intent = new Intent(FoodStockActivityOLD.this, LoginActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.new_user:
                 // Handle "Order History" menu item click
-                intent = new Intent(FoodStockActivity.this, NewUserActivity.class);
+                intent = new Intent(FoodStockActivityOLD.this, NewUserActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -84,6 +86,10 @@ public class FoodStockActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_stock);
 
+        mDoughEditText = findViewById(R.id.dough_edit_text);
+        mCheeseEditText = findViewById(R.id.cheese_edit_text);
+        mSauceEditText = findViewById(R.id.sauce_edit_text);
+        mChickenEditText = findViewById(R.id.chicken_edit_text);
         mOrderTextView = findViewById(R.id.order_text_view);
         mSubmitButton = findViewById(R.id.submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +103,35 @@ public class FoodStockActivity extends AppCompatActivity {
 
 
                 // Compare current stock to required stock
-
+                StringBuilder orders = new StringBuilder();
+                if (currentDough < REQUIRED_DOUGH) {
+                    int cases = (REQUIRED_DOUGH - currentDough) / DOUGH_PER_CASE;
+                    if ((REQUIRED_DOUGH - currentDough) % DOUGH_PER_CASE != 0) {
+                        cases++;
+                    }
+                    orders.append(cases + " case dough \n");
+                }
+                if (currentCheese < REQUIRED_CHEESE) {
+                    int cases = (REQUIRED_CHEESE - currentCheese) / CHEESE_PER_CASE;
+                    if ((REQUIRED_CHEESE - currentCheese) % CHEESE_PER_CASE != 0) {
+                        cases++;
+                    }
+                    orders.append(cases + " case cheese \n");
+                }
+                if (currentSauce < REQUIRED_SAUCE) {
+                    int cases = (REQUIRED_SAUCE - currentSauce) / SAUCE_PER_CASE;
+                    if ((REQUIRED_SAUCE - currentSauce) % SAUCE_PER_CASE != 0) {
+                        cases++;
+                    }
+                    orders.append(cases + " case sauce \n");
+                }
+                if (currentChicken < REQUIRED_CHICKEN) {
+                    int cases = (REQUIRED_CHICKEN - currentChicken) / CHICKEN_PER_CASE;
+                    if ((REQUIRED_CHICKEN - currentChicken) % CHICKEN_PER_CASE != 0) {
+                        cases++;
+                    }
+                    orders.append(cases + " case chicken \n");
+                }
 
 
                 Button copyButton = findViewById(R.id.copy_button);
@@ -113,6 +147,16 @@ public class FoodStockActivity extends AppCompatActivity {
                     }
                 });
 
+
+                // Display list of items to order
+                if (orders.length() > 0) {
+                    orders.setLength(orders.length() - 2);
+                    mOrderTextView.setText("Delco Order: \n" + orders.toString());
+                    // Connect to MySQL and submit order
+                    submitOrder(orders.toString());
+                } else {
+                    mOrderTextView.setText("No items to order.");
+                }
 
 
             }
@@ -154,82 +198,5 @@ public class FoodStockActivity extends AppCompatActivity {
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-    private void getList() {
-        String url = "https://example.com/retrieve_food_info.php";
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            List<String> orderList = new ArrayList<String>();
-
-                            JSONArray jsonArray = new JSONArray(response);
-
-                            // Use a loop to iterate through the results returned by the PHP script
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                // Create a text field for each food item to get the current stock from the user
-                                String foodItemName = jsonObject.getString("food_item_name");
-                                String caseName = jsonObject.getString("caseName");
-                                int requiredStock = jsonObject.getInt("reqStock");
-                                int stockPerCase = jsonObject.getInt("perCase");
-                                int isCase = jsonObject.getInt("isCase");
-
-                                EditText stockEditText = new EditText(getApplicationContext());
-                                stockEditText.setHint("Enter current stock for " + foodItemName);
-
-                                // Add the stockEditText to the appropriate layout
-
-                                // Use a method to calculate the amount to order
-                                int currentStock = Integer.parseInt(stockEditText.getText().toString());
-                                int casesToOrder = (requiredStock - currentStock) / stockPerCase;
-
-                                // Print out the list of items to order for the user
-                                if (casesToOrder > 0) {
-                                    String orderText = casesToOrder + caseName;
-                                    if (casesToOrder > 1) {
-                                        orderText += "s";
-                                    }
-                                    orderText += " of " + foodItemName;
-                                    // Add the orderText to the appropriate layout
-                                }
-                            }
-                            if (orderList.size() > 0) {
-                                StringBuilder orderText = new StringBuilder();
-                                for (String item : orderList) {
-                                    orderText.append(item + "\n");
-                                }
-                                mOrderTextView.setText("Delco Order: \n" + orderText.toString());
-                                // Connect to MySQL and submit order
-                                submitOrder(orderText.toString());
-                            } else {
-                                mOrderTextView.setText("No items to order.");
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Handle error
-            }
-        });
-        queue.add(stringRequest);
-    }
-    public int calculateAmountToOrder(String foodItemName, int requiredStock, int currentStock, int isCase, int stockPerCase, String caseName) {
-        if (isCase == 1) {
-        int casesToOrder = (requiredStock - currentStock) / stockPerCase;
-        System.out.println("Order " + casesToOrder + " cases of " + foodItemName);
-        return casesToOrder; }
-        else {
-            int casesToOrder = (requiredStock - currentStock);
-            System.out.println(foodItemName + " " + casesToOrder + " " + caseName);
-            return casesToOrder;
-        }
     }
 }

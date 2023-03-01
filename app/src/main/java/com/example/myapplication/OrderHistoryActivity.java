@@ -17,10 +17,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuInflater;
-import android.content.Intent;
 
 public class OrderHistoryActivity extends AppCompatActivity {
 
@@ -41,7 +37,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_stock:
                 // Handle "Food Stock" menu item click
-                Intent intent = new Intent(OrderHistoryActivity.this, FoodStockActivity.class);
+                Intent intent = new Intent(OrderHistoryActivity.this, FoodStockActivityOLD.class);
                 startActivity(intent);
                 return true;
             case R.id.menu_history:
