@@ -27,23 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FoodStockActivity extends AppCompatActivity {
-    private EditText mDoughEditText;
-    private EditText mCheeseEditText;
-    private EditText mSauceEditText;
-    private EditText mChickenEditText;
     private TextView mOrderTextView;
     private Button mSubmitButton;
-
-    // Required stock
-    private static final int REQUIRED_DOUGH = 90;
-    private static final int DOUGH_PER_CASE = 30;
-    private static final int REQUIRED_CHEESE = 12;
-    private static final int CHEESE_PER_CASE = 4;
-    private static final int REQUIRED_SAUCE = 4;
-    private static final int SAUCE_PER_CASE = 6;
-    private static final int REQUIRED_CHICKEN = 4;
-    private static final int CHICKEN_PER_CASE = 6;
-
 
     @SuppressLint("ResourceType")
     @Override
@@ -84,21 +69,14 @@ public class FoodStockActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_stock);
 
+        Intent intent = getIntent();
+        String listID = intent.getStringExtra("listID");
+
         mOrderTextView = findViewById(R.id.order_text_view);
         mSubmitButton = findViewById(R.id.submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get current stock
-                int currentDough = Integer.parseInt(mDoughEditText.getText().toString());
-                int currentCheese = Integer.parseInt(mCheeseEditText.getText().toString());
-                int currentSauce = Integer.parseInt(mSauceEditText.getText().toString());
-                int currentChicken = Integer.parseInt(mChickenEditText.getText().toString());
-
-
-                // Compare current stock to required stock
-
-
 
                 Button copyButton = findViewById(R.id.copy_button);
                 EditText editText = findViewById(R.id.order_text_view);
@@ -109,15 +87,9 @@ public class FoodStockActivity extends AppCompatActivity {
                         String text = editText.getText().toString();
                         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                         clipboard.setText(text);
-
                     }
                 });
-
-
-
             }
-
-
         });
     }
 
@@ -155,8 +127,8 @@ public class FoodStockActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-    private void getList() {
-        String url = "https://example.com/retrieve_food_info.php";
+    private void runInventory(String listID) {
+        String url = "https://yourdomain.com/run_inventory.php?listID=" + listID;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -230,4 +202,7 @@ public class FoodStockActivity extends AppCompatActivity {
         });
         queue.add(stringRequest);
     }
+
+
+
 }
