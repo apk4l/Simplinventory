@@ -173,20 +173,29 @@ public class FoodStockActivity extends AppCompatActivity {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                                 // Create a text field for each food item to get the current stock from the user
-                                String foodItemName = jsonObject.getString("food_item_name");
+                                String itemName = jsonObject.getString("itemName");
                                 String caseName = jsonObject.getString("caseName");
                                 int requiredStock = jsonObject.getInt("reqStock");
                                 int stockPerCase = jsonObject.getInt("perCase");
                                 int isCase = jsonObject.getInt("isCase");
 
                                 EditText stockEditText = new EditText(getApplicationContext());
-                                stockEditText.setHint("Enter current stock for " + foodItemName);
+                                stockEditText.setHint("Enter current stock for " + itemName);
 
                                 // Add the stockEditText to the appropriate layout
 
                                 // Use a method to calculate the amount to order
                                 int currentStock = Integer.parseInt(stockEditText.getText().toString());
-                                int casesToOrder = (requiredStock - currentStock) / stockPerCase;
+                                int casesToOrder = 0;
+                                if (isCase == 1) {
+                                    casesToOrder = (requiredStock - currentStock) / stockPerCase;
+                                    System.out.println("Order " + casesToOrder + " cases of " + itemName); }
+                                else {
+                                    casesToOrder = (requiredStock - currentStock);
+                                    System.out.println(itemName + " " + casesToOrder + " " + caseName);
+
+                                }
+
 
                                 // Print out the list of items to order for the user
                                 if (casesToOrder > 0) {
@@ -194,7 +203,7 @@ public class FoodStockActivity extends AppCompatActivity {
                                     if (casesToOrder > 1) {
                                         orderText += "s";
                                     }
-                                    orderText += " of " + foodItemName;
+                                    orderText += " of " + itemName;
                                     // Add the orderText to the appropriate layout
                                 }
                             }
@@ -220,16 +229,5 @@ public class FoodStockActivity extends AppCompatActivity {
             }
         });
         queue.add(stringRequest);
-    }
-    public int calculateAmountToOrder(String foodItemName, int requiredStock, int currentStock, int isCase, int stockPerCase, String caseName) {
-        if (isCase == 1) {
-        int casesToOrder = (requiredStock - currentStock) / stockPerCase;
-        System.out.println("Order " + casesToOrder + " cases of " + foodItemName);
-        return casesToOrder; }
-        else {
-            int casesToOrder = (requiredStock - currentStock);
-            System.out.println(foodItemName + " " + casesToOrder + " " + caseName);
-            return casesToOrder;
-        }
     }
 }
