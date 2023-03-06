@@ -3,7 +3,9 @@ package com.example.myapplication;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -57,7 +59,8 @@ public class InventoryActivity extends AppCompatActivity {
 
 // Create a new linear layout to hold the text and edit text fields
                             LinearLayout itemLayout = new LinearLayout(InventoryActivity.this);
-                            itemLayout.setOrientation(LinearLayout.HORIZONTAL);
+                            itemLayout.setOrientation(LinearLayout.VERTICAL);
+                            itemLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 
 // Create a new text field and add it to the linear layout
                             TextView textField = new TextView(InventoryActivity.this);
@@ -68,6 +71,15 @@ public class InventoryActivity extends AppCompatActivity {
                             EditText editText = new EditText(InventoryActivity.this);
                             editText.setTag(itemName);
                             itemLayout.addView(editText);
+
+// Set the layout parameters for the text view and edit text
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+                            textField.setLayoutParams(layoutParams);
+                            editText.setLayoutParams(layoutParams);
 
                             // Create a new inventory item and add it to the list
                             InventoryItem inventoryItem = new InventoryItem(itemName, isCase, reqStock, perCase, caseName);
