@@ -85,11 +85,6 @@ public class FoodStockActivityOLD extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_stock);
-
-        mDoughEditText = findViewById(R.id.dough_edit_text);
-        mCheeseEditText = findViewById(R.id.cheese_edit_text);
-        mSauceEditText = findViewById(R.id.sauce_edit_text);
-        mChickenEditText = findViewById(R.id.chicken_edit_text);
         mOrderTextView = findViewById(R.id.order_text_view);
         mSubmitButton = findViewById(R.id.submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
