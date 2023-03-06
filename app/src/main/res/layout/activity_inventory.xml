@@ -13,4 +13,16 @@
             android:layout_gravity="center"
             android:text="Submit"
             android:layout_marginTop="16dp" />
+    <Button
+            android:id="@+id/calculate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calculate Order"
+            android:onClick="calculateOrder" />
+    <TextView
+            android:id="@+id/order_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp" />
 </LinearLayout>

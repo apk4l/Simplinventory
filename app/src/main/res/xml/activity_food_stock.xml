@@ -50,12 +50,14 @@
         android:layout_gravity="center"
         android:text="Submit"
         android:layout_marginTop="16dp" />
-    <TextView
-        android:id="@+id/order_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp" />
+    <EditText
+            android:id="@+id/order_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="11dp"
+            android:inputType="text|textMultiLine"
+            android:layout_marginTop="16dp" />
 
 </LinearLayout>
 
