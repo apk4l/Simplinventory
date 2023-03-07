@@ -59,8 +59,8 @@ public class LoginActivity extends AppCompatActivity {
                                         editor.apply();
 
                                         // Launch the main activity
-                                        Intent intent = new Intent(LoginActivity.this, FoodStockActivityOLD.class);
-                                        intent.putExtra("username", username);
+                                        Intent intent = new Intent(LoginActivity.this, ListsActivity.class);
+                                        intent.putExtra("userID", username);
                                         startActivity(intent);
                                         finish();
                                     } else {

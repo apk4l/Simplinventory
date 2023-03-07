@@ -28,74 +28,78 @@ public class InventoryActivity extends AppCompatActivity {
 
         mContainer = findViewById(R.id.container);
         mOrderTextView = findViewById(R.id.order_text_view);
-        // Get a reference to the calculate order button
-        Button calculateOrderButton = findViewById(R.id.calculate_button);
-
-        // Set the click listener for the button
-        calculateOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculateOrder(v);
-            }
-        });
-
-        // Get the listID parameter from the intent
-        // String listID = getIntent().getStringExtra("listID");
 
         // Make a request to the PHP script using Volley
+        LinearLayout mainLayout = new LinearLayout(InventoryActivity.this);
+        mainLayout.setOrientation(LinearLayout.VERTICAL);
+
         String url = "https://kentzysk.com/androidinv/run_inventory.php?listID=2";
-        JsonArrayRequest request = new JsonArrayRequest(url,
-                response -> {
-                    // Loop through the items and create a text field and an edit text field for each one
-                    mInventoryItems = new ArrayList<>();
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject item = response.getJSONObject(i);
-                            String itemName = item.getString("itemName");
-                            int isCase = item.getInt("isCase");
-                            int reqStock = item.getInt("reqStock");
-                            int perCase = item.getInt("perCase");
-                            String caseName = item.getString("caseName");
+        JsonArrayRequest request = new JsonArrayRequest(url, response -> {
 
-// Create a new linear layout to hold the text and edit text fields
-                            LinearLayout itemLayout = new LinearLayout(InventoryActivity.this);
-                            itemLayout.setOrientation(LinearLayout.VERTICAL);
-                            itemLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+            // Loop through the items and create a text field and an edit text field for each one
+            mInventoryItems = new ArrayList<>();
+            for (int i = 0; i < response.length(); i++) {
+                try {
+                    JSONObject item = response.getJSONObject(i);
+                    String itemName = item.getString("itemName");
+                    int isCase = item.getInt("isCase");
+                    int reqStock = item.getInt("reqStock");
+                    int perCase = item.getInt("perCase");
+                    String caseName = item.getString("caseName");
 
-// Create a new text field and add it to the linear layout
-                            TextView textField = new TextView(InventoryActivity.this);
-                            textField.setText(itemName);
-                            itemLayout.addView(textField);
+                    // Create a new linear layout to hold the text and edit text fields
+                    LinearLayout itemLayout = new LinearLayout(InventoryActivity.this);
+                    itemLayout.setOrientation(LinearLayout.VERTICAL);
+                    itemLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 
-// Create a new edit text field and add it to the linear layout
-                            EditText editText = new EditText(InventoryActivity.this);
-                            editText.setTag(itemName);
-                            itemLayout.addView(editText);
+                    // Create a new text field and add it to the linear layout
+                    TextView textField = new TextView(InventoryActivity.this);
+                    textField.setText(itemName);
+                    textField.setGravity(Gravity.CENTER_HORIZONTAL);
+                    itemLayout.addView(textField);
 
-// Set the layout parameters for the text view and edit text
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-                            textField.setLayoutParams(layoutParams);
-                            editText.setLayoutParams(layoutParams);
+                    // Create a new edit text field and add it to the linear layout
+                    EditText editText = new EditText(InventoryActivity.this);
+                    editText.setTag(itemName);
+                    itemLayout.addView(editText);
 
-                            // Create a new inventory item and add it to the list
-                            InventoryItem inventoryItem = new InventoryItem(itemName, isCase, reqStock, perCase, caseName);
-                            mInventoryItems.add(inventoryItem);
+                    // Set the layout parameters for the text view and edit text
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+                    textField.setLayoutParams(layoutParams);
+                    editText.setLayoutParams(layoutParams);
 
-                            // Add the linear layout to the container
-                            mContainer.addView(itemLayout);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                error -> Toast.makeText(InventoryActivity.this, "Error loading items", Toast.LENGTH_SHORT).show());
+                    // Create a new inventory item and add it to the list
+                    InventoryItem inventoryItem = new InventoryItem(itemName, isCase, reqStock, perCase, caseName);
+                    mInventoryItems.add(inventoryItem);
+
+                    // Add the linear layout to the main layout
+                    mainLayout.addView(itemLayout);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Create the "Calculate Order" button and add it to the main layout
+            Button calculateOrderButton = new Button(InventoryActivity.this);
+            calculateOrderButton.setText("Calculate Order");
+            calculateOrderButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    calculateOrder(v);
+                }
+            });
+            mainLayout.addView(calculateOrderButton);
+        }, error -> Toast.makeText(InventoryActivity.this, "Error loading items", Toast.LENGTH_SHORT).show());
 
         // Add the request to the Volley request queue
         Volley.newRequestQueue(this).add(request);
+
+        // Add the main layout to the container
+        mContainer.addView(mainLayout);
     }
 
     public void calculateOrder(View view) {

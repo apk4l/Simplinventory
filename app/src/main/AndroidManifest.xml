@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".InventoryActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,16 @@
                 android:value="" />
         </activity>
         <activity
-                android:name=".LoginActivity"
+                android:name=".ListsActivity"
+                android:exported="false"
+                android:label="Order History"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
+        <activity
+                android:name=".InventoryActivity"
                 android:exported="false"
                 android:label="Login"
                 android:theme="@style/AppTheme.NoActionBar">
