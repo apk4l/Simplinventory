@@ -24,7 +24,7 @@
             android:name=".OrderHistoryActivity"
             android:exported="false"
             android:label="Order History"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -33,7 +33,7 @@
                 android:name=".ListsActivity"
                 android:exported="false"
                 android:label="Order History"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme">
             <meta-data
                     android:name="android.app.lib_name"
                     android:value="" />
@@ -42,7 +42,7 @@
                 android:name=".InventoryActivity"
                 android:exported="false"
                 android:label="Login"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme">
             <meta-data
                     android:name="android.app.lib_name"
                     android:value="" />

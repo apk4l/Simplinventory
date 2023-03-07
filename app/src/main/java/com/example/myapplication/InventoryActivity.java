@@ -25,15 +25,26 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
-
+        String listName = getIntent().getStringExtra("listName");
+        setTitle(listName);
         mContainer = findViewById(R.id.container);
         mOrderTextView = findViewById(R.id.order_text_view);
+
+        // Get the listID from the intent
+        int listID = getIntent().getIntExtra("listID", -1);
+
+        // Check if the listID is valid
+        if (listID == -1) {
+            Toast.makeText(this, "Invalid listID", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Make a request to the PHP script using Volley
         LinearLayout mainLayout = new LinearLayout(InventoryActivity.this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
 
-        String url = "https://kentzysk.com/androidinv/run_inventory.php?listID=2";
+        String url = "https://kentzysk.com/androidinv/run_inventory.php?listID=" + listID;
         JsonArrayRequest request = new JsonArrayRequest(url, response -> {
 
             // Loop through the items and create a text field and an edit text field for each one
