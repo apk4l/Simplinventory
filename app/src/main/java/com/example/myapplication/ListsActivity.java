@@ -4,8 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.*;
 import android.widget.*;
 import android.app.Activity;
 import androidx.appcompat.app.AlertDialog;
@@ -28,9 +27,12 @@ public class ListsActivity extends AppCompatActivity {
 
     private ArrayList<ListItem> mListItems;
     private ListView mListView;
+    private int mLongPressedListId;
+
+    private String mLongPressedListName;
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -53,6 +55,9 @@ public class ListsActivity extends AppCompatActivity {
         setTitle("Your Lists");
         mListItems = new ArrayList<>();
         mListView = findViewById(R.id.list_view);
+
+        // Register the ListView for a context menu
+        registerForContextMenu(mListView);
 
         // Make a request to the PHP script using Volley
         String url = "https://kentzysk.com/androidinv/get_lists.php?userID=" + getUserId();
@@ -122,6 +127,51 @@ public class ListsActivity extends AppCompatActivity {
             return listName;
         }
     }
+
+    // Inflate the context menu when the user long presses on a list item
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.list_view) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.list_item_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        ListItem listItem = (ListItem) mListView.getItemAtPosition(info.position);
+        mLongPressedListId = listItem.getListId();
+        mLongPressedListName = listItem.getListName();
+
+        switch (item.getItemId()) {
+            case R.id.menu_edit:
+                Intent intent = new Intent(ListsActivity.this, EditItemsActivity.class);
+                intent.putExtra("listID", mLongPressedListId);
+                intent.putExtra("listName", mLongPressedListName);
+                startActivity(intent);
+                return true;
+            case R.id.menu_delete:
+                new AlertDialog.Builder(ListsActivity.this)
+                        .setTitle("Delete Item")
+                        .setMessage("Are you sure you want to delete this item?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Call deleteItem() with the selected itemID
+                                deleteList(mLongPressedListId);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
     private void showNewListDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New List");
@@ -202,5 +252,35 @@ public class ListsActivity extends AppCompatActivity {
             mListView.setAdapter(adapter);
         }, error -> Toast.makeText(ListsActivity.this, "Error loading lists", Toast.LENGTH_SHORT).show());
         Volley.newRequestQueue(this).add(request);
+    }
+    private void deleteList(int listID) {
+        String url = "https://kentzysk.com/androidinv/delete_list.php?listID=" + listID;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json = new JSONObject(response);
+                            boolean success = json.getBoolean("success");
+                            if (success) {
+                                Intent intent = new Intent(ListsActivity.this, ListsActivity.class);
+                                startActivity(intent);
+                                finish(); // finish the current activity to prevent stacking of activities
+                            } else {
+                                Toast.makeText(ListsActivity.this, "Error deleting list", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(ListsActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ListsActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        queue.add(request);
     }
 }

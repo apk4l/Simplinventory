@@ -52,6 +52,7 @@ public class InventoryActivity extends AppCompatActivity {
             for (int i = 0; i < response.length(); i++) {
                 try {
                     JSONObject item = response.getJSONObject(i);
+                    int itemID = item.getInt("itemID");
                     String itemName = item.getString("itemName");
                     int isCase = item.getInt("isCase");
                     int reqStock = item.getInt("reqStock");
@@ -84,7 +85,7 @@ public class InventoryActivity extends AppCompatActivity {
                     editText.setLayoutParams(layoutParams);
 
                     // Create a new inventory item and add it to the list
-                    InventoryItem inventoryItem = new InventoryItem(itemName, isCase, reqStock, perCase, caseName);
+                    InventoryItem inventoryItem = new InventoryItem(itemName, isCase, reqStock, perCase, caseName, itemID);
                     mInventoryItems.add(inventoryItem);
 
                     // Add the linear layout to the main layout
@@ -136,11 +137,15 @@ public class InventoryActivity extends AppCompatActivity {
                 continue;
             }
 
-            int orderAmount = item.getReqStock() - currentStock;
-
+            int orderAmount = 0;
+            if (item.isCase() == 1) {
+                orderAmount = (item.getReqStock() - currentStock) / item.getPerCase();
+            } else {
+                orderAmount = item.getReqStock() - currentStock;
+            }
             // Add the order amount to the list
             if (orderAmount > 0) {
-                String orderItem = "Order amount " + item.getCaseName() + ": " + orderAmount;
+                String orderItem = "" + orderAmount + " " + item.getCaseName();
                 orderList.add(orderItem);
             }
         }

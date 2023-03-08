@@ -1,13 +1,15 @@
 package com.example.myapplication;
 
 public class InventoryItem {
+    private int itemID;
     private String itemName;
     private int isCase;
     private int reqStock;
     private int perCase;
     private String caseName;
 
-    public InventoryItem(String itemName, int isCase, int reqStock, int perCase, String caseName) {
+    public InventoryItem(String itemName, int isCase, int reqStock, int perCase, String caseName, int itemID) {
+        this.itemID = itemID;
         this.itemName = itemName;
         this.isCase = isCase;
         this.reqStock = reqStock;
