@@ -24,14 +24,17 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordEditText;
     private Button mLoginButton;
 
+    private Button mCreateButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
+        setTitle("Login");
         mUsernameEditText = findViewById(R.id.username_edittext);
         mPasswordEditText = findViewById(R.id.password_edittext);
         mLoginButton = findViewById(R.id.login_button);
+        mCreateButton = findViewById(R.id.create_button);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +92,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 };
                 queue.add(request);
+            }
+        });
+        mCreateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, NewUserActivity.class);
+                startActivity(intent);
             }
         });
     }

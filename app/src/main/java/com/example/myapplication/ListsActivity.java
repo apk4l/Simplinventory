@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -146,6 +147,7 @@ public class ListsActivity extends AppCompatActivity {
         mLongPressedListId = listItem.getListId();
         mLongPressedListName = listItem.getListName();
 
+
         switch (item.getItemId()) {
             case R.id.menu_edit:
                 Intent intent = new Intent(ListsActivity.this, EditItemsActivity.class);
@@ -194,6 +196,8 @@ public class ListsActivity extends AppCompatActivity {
         });
         builder.show();
     }
+
+
     private void createNewList(String listName) {
         String url = "https://kentzysk.com/androidinv/new_list.php";
         RequestQueue queue = Volley.newRequestQueue(this);

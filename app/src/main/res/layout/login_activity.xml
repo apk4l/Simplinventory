@@ -4,7 +4,14 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="16dp">
-
+    <TextView
+            android:id="@+id/login_text"
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_button"
+            android:text="Login:"
+            android:textSize="25dp"
+            android:textColor="@android:color/black"/>
         <EditText
                 android:id="@+id/username_edittext"
                 android:layout_width="match_parent"
@@ -23,4 +30,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Login"/>
+
+    <TextView
+            android:id="@+id/signup_textview"
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_button"
+            android:text="New Users:"
+            android:textSize="20dp"
+            android:textColor="@android:color/black"/>
+    <Button
+            android:id="@+id/create_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Account"/>
     </LinearLayout>

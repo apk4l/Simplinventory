@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.InventoryItem;
@@ -300,7 +301,21 @@ public class EditItemsActivity extends AppCompatActivity {
         int itemID = (int) selectedRow.getTag();
 
         menu.setHeaderTitle("Item Options");
-        menu.add(Menu.NONE, 0, 0, "Edit");
+
+        menu.add(Menu.NONE, 0, 0, "Edit").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Get the itemID from the tag of the selected row
+                TableRow selectedRow = (TableRow) v;
+                int itemID = (int) selectedRow.getTag();
+
+                // Show the edit item dialog
+                showEditItemDialog(itemID);
+
+                return true;
+            }
+        });
+
         menu.add(Menu.NONE, 1, 1, "Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -374,8 +389,8 @@ public class EditItemsActivity extends AppCompatActivity {
         };
         queue.add(request);
     }
-    private void deleteItem(int listID) {
-        String url = "https://kentzysk.com/androidinv/delete_list.php?listID=" + listID;
+    private void deleteItem(int itemID) {
+        String url = "https://kentzysk.com/androidinv/delete_item.php";
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -385,11 +400,14 @@ public class EditItemsActivity extends AppCompatActivity {
                             JSONObject json = new JSONObject(response);
                             boolean success = json.getBoolean("success");
                             if (success) {
-                               Intent intent = new Intent(EditItemsActivity.this, EditItemsActivity.class);
+                                int listID = getIntent().getIntExtra("listID", -1);
+                                Intent intent = new Intent(EditItemsActivity.this, EditItemsActivity.class);
+                                intent.putExtra("listID", listID);
+                                String listName = getIntent().getStringExtra("listName");
+                                intent.putExtra("listName", listName);
                                 startActivity(intent);
                                 finish(); // finish the current activity to prevent stacking of activities
                             } else {
-                                System.out.println("List ID" + listID);
                                 Toast.makeText(EditItemsActivity.this, "Error deleting item", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
@@ -405,11 +423,149 @@ public class EditItemsActivity extends AppCompatActivity {
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                String listID = String.valueOf(getIntent().getIntExtra("listID", -1));
                 Map<String, String> params = new HashMap<>();
-                params.put("listID", String.valueOf(listID));;
+                params.put("userID", getUserId());
+                params.put("listID", listID);
+                params.put("itemID", String.valueOf(itemID));
                 return params;
             }
         };
         queue.add(request);
+    }
+    private void showEditItemDialog(int itemID) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Item");
+
+        // Create the layout for the dialog
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 50, 50, 50);
+
+        // Create the text fields and radio button
+        TextView itemNameLabel = new TextView(this);
+        itemNameLabel.setText("Item Name");
+        layout.addView(itemNameLabel);
+        EditText itemNameInput = new EditText(this);
+        layout.addView(itemNameInput);
+
+        TextView reqStockLabel = new TextView(this);
+        reqStockLabel.setText("Required Stock");
+        layout.addView(reqStockLabel);
+        EditText reqStockInput = new EditText(this);
+        layout.addView(reqStockInput);
+
+        TextView perCaseLabel = new TextView(this);
+        perCaseLabel.setText("Per Case");
+        layout.addView(perCaseLabel);
+        EditText perCaseInput = new EditText(this);
+        layout.addView(perCaseInput);
+
+        TextView caseNameLabel = new TextView(this);
+        caseNameLabel.setText("Case Name");
+        layout.addView(caseNameLabel);
+        EditText caseNameInput = new EditText(this);
+        layout.addView(caseNameInput);
+        TextView isCaseLabel = new TextView(this);
+        isCaseLabel.setText("Order by Case?");
+        layout.addView(isCaseLabel);
+        RadioGroup isCaseGroup = new RadioGroup(this);
+        isCaseGroup.setOrientation(RadioGroup.HORIZONTAL);
+
+        RadioButton isCaseYes = new RadioButton(this);
+        isCaseYes.setText("Yes");
+        isCaseYes.setId(View.generateViewId());
+        isCaseGroup.addView(isCaseYes);
+
+        RadioButton isCaseNo = new RadioButton(this);
+        isCaseNo.setText("No");
+        isCaseNo.setId(View.generateViewId());
+        isCaseGroup.addView(isCaseNo);
+
+        layout.addView(isCaseGroup);
+
+        // Make a request to the PHP script to get the item details
+        String url = "https://kentzysk.com/androidinv/get_item.php?itemID=" + itemID;
+        JsonObjectRequest request = new JsonObjectRequest(url, null,
+                response -> {
+                    try {
+                        // Populate the text fields and radio button with the item details
+                        itemNameInput.setText(response.getString("itemName"));
+                        reqStockInput.setText(response.getString("reqStock"));
+                        perCaseInput.setText(response.getString("perCase"));
+                        caseNameInput.setText(response.getString("caseName"));
+                        int isCase = response.getInt("isCase");
+                        if (isCase == 1) {
+                            isCaseYes.setChecked(true);
+                        } else {
+                            isCaseNo.setChecked(true);
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(EditItemsActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(EditItemsActivity.this, "Error loading item details", Toast.LENGTH_SHORT).show()
+        );
+
+        // Add the request to the Volley request queue
+        Volley.newRequestQueue(this).add(request);
+
+        builder.setView(layout);
+
+        // Set the positive button to update the item
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String itemName = itemNameInput.getText().toString();
+                int reqStock = Integer.parseInt(reqStockInput.getText().toString());
+                int perCase = Integer.parseInt(perCaseInput.getText().toString());
+                String caseName = caseNameInput.getText().toString();
+                int isCase = isCaseYes.isChecked() ? 1 : 0;
+
+                if (!itemName.isEmpty()) {
+                    updateItem(itemID, itemName, isCase, reqStock, perCase, caseName);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void updateItem(int itemID, String itemName, int isCase, int reqStock, int perCase, String caseName) {
+        String url = "https://kentzysk.com/androidinv/edit_item.php";
+
+        // Make a request to the PHP script using Volley
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+            // Check if the response contains "success"
+            if (response.contains("success")) {
+                int listID = getIntent().getIntExtra("listID", -1);
+                Intent intent = new Intent(EditItemsActivity.this, EditItemsActivity.class);
+                intent.putExtra("listID", listID);
+                String listName = getIntent().getStringExtra("listName");
+                intent.putExtra("listName", listName);
+                startActivity(intent);
+                finish(); // finish the current activity to prevent stacking of activities
+            } else {
+                Toast.makeText(this, "Error updating item", Toast.LENGTH_SHORT).show();
+            }
+        }, error -> Toast.makeText(this, "Error updating item", Toast.LENGTH_SHORT).show()) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                // Set the POST parameters for the request
+                Map<String, String> params = new HashMap<>();
+                params.put("itemID", String.valueOf(itemID));
+                params.put("itemName", itemName);
+                params.put("isCase", String.valueOf(isCase));
+                params.put("reqStock", String.valueOf(reqStock));
+                params.put("perCase", String.valueOf(perCase));
+                params.put("caseName", caseName);
+                return params;
+            }
+        };
+
+        // Add the request to the Volley request queue
+        Volley.newRequestQueue(this).add(request);
     }
 }
