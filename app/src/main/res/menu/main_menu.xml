@@ -4,17 +4,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       tools:context="com.example.lolipoptest.MainActivity" >
     <item
-            android:id="@+id/menu_stock"
-            android:title="Your Lists" />
-    <item
             android:id="@+id/menu_history"
             android:title="Orders History" />
+
     <item
-            android:id="@+id/login"
-            android:title="Change User" />
-    <item
-            android:id="@+id/new_user"
-            android:title="New User" />
+            android:id="@+id/menu_reorder"
+            android:title="Reorder List" />
     <item
             android:id="@+id/menu_add"
             android:title="Add"

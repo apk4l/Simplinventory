@@ -5,20 +5,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +47,9 @@ public class NewUserActivity extends AppCompatActivity {
                 String email = mEmailEditText.getText().toString();
                 String resetQuestion = mResetQuestionEditText.getText().toString();
                 String resetAnswer = mResetAnswerEditText.getText().toString();
+
+                // Hash password using SHA-256
+                String hashedPassword = hashPassword(password);
 
                 // Send new user details to PHP script
                 String url = "https://kentzysk.com/androidinv/new_user.php";
@@ -87,7 +86,7 @@ public class NewUserActivity extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("username", username);
-                        params.put("password", password);
+                        params.put("password", hashedPassword);
                         params.put("email", email);
                         params.put("resetQuestion", resetQuestion);
                         params.put("resetAnswer", resetAnswer);
@@ -97,5 +96,25 @@ public class NewUserActivity extends AppCompatActivity {
                 queue.add(request);
             }
         });
+    }
+
+    private String hashPassword(String password) {
+        try {
+            // Use SHA-256 hashing algorithm
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            // Convert byte array to hexadecimal string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // Handle hashing algorithm not found error
+            e.printStackTrace();
+            return null;
+        }
     }
 }

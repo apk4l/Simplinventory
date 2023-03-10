@@ -32,7 +32,7 @@ public class EditItemsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -42,6 +42,17 @@ public class EditItemsActivity extends AppCompatActivity {
                 // Show a dialog to get the new list name from the user
                 showNewItemDialog();
                 return true;
+            case R.id.menu_reorder:
+                // Create an intent to start ReOrderItemsActivity
+                Intent intent = new Intent(this, ReOrderItemsActivity.class);
+                // Get the listID from the intent
+                int listID = getIntent().getIntExtra("listID", -1);
+                // Add the listID to the intent for ReOrderItemsActivity
+                intent.putExtra("listID", listID);
+                String listName = getIntent().getStringExtra("listName");
+                intent.putExtra("listName", listName);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -50,7 +61,7 @@ public class EditItemsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String listName = getIntent().getStringExtra("listName");
-        setTitle("Editing " + listName);
+        setTitle("Edit List: " + listName);
         mContainer = new LinearLayout(this);
         setContentView(mContainer);
         mContainer.setLayoutParams(new FrameLayout.LayoutParams(

@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
+import android.util.Log;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -30,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        setTitle("Login");
+        setTitle("Small Biz Inventory");
         mUsernameEditText = findViewById(R.id.username_edittext);
         mPasswordEditText = findViewById(R.id.password_edittext);
         mLoginButton = findViewById(R.id.login_button);
@@ -87,7 +90,8 @@ public class LoginActivity extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("username", username);
-                        params.put("password", password);
+                        params.put("password", hashPassword(password));
+                        Log.d("LoginActivity", "Hashed password: " + hashPassword(password)); // add this line
                         return params;
                     }
                 };
@@ -101,5 +105,24 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    private String hashPassword(String password) {
+        try {
+            // Use SHA-256 hashing algorithm
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            // Convert byte array to hexadecimal string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // Handle hashing algorithm not found error
+            e.printStackTrace();
+            return null;
+        }
     }
 }

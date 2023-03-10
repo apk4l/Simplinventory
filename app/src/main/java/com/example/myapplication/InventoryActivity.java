@@ -26,7 +26,7 @@ public class InventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
         String listName = getIntent().getStringExtra("listName");
-        setTitle(listName);
+        setTitle("Inventory: " + listName);
         mContainer = findViewById(R.id.container);
         mOrderTextView = findViewById(R.id.order_text_view);
 
@@ -138,16 +138,24 @@ public class InventoryActivity extends AppCompatActivity {
             }
 
             int orderAmount = 0;
+            double caseOrder = 0;
             if (item.isCase() == 1) {
-                orderAmount = (item.getReqStock() - currentStock) / item.getPerCase();
-            } else {
-                orderAmount = item.getReqStock() - currentStock;
-            }
+                if (currentStock < item.getReqStock()) {
+                    caseOrder = (item.getReqStock() - currentStock) / item.getPerCase();
+                    if ((item.getReqStock() - currentStock) % item.getPerCase() != 0) {
+                        caseOrder++;
+                    }
+                    orderAmount = (int) caseOrder;
+                }
+                } else {
+                    orderAmount = (int) Math.ceil(caseOrder);
+                }
             // Add the order amount to the list
             if (orderAmount > 0) {
-                String orderItem = "" + orderAmount + " " + item.getCaseName();
+                String orderItem = "" + orderAmount + " " + item.getCaseName() + "TEST:reqstock:"+ item.getReqStock() + "TEST:" + caseOrder;
                 orderList.add(orderItem);
             }
+            orderAmount = 0;
         }
 
         // Display the order list in the order TextView

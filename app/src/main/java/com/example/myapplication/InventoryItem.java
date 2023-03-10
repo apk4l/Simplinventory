@@ -8,6 +8,14 @@ public class InventoryItem {
     private int perCase;
     private String caseName;
 
+    private String mItemName;
+    private int mIsCase;
+    private int mReqStock;
+    private int mPerCase;
+    private String mCaseName;
+    private int mItemID;
+    private int mItemOrder;
+
     public InventoryItem(String itemName, int isCase, int reqStock, int perCase, String caseName, int itemID) {
         this.itemID = itemID;
         this.itemName = itemName;
@@ -25,6 +33,10 @@ public class InventoryItem {
         return isCase;
     }
 
+    public int getItemID() {
+        return itemID;
+    }
+
     public int getReqStock() {
         return reqStock;
     }
@@ -35,5 +47,13 @@ public class InventoryItem {
 
     public String getCaseName() {
         return caseName;
+    }
+
+    public int getItemOrder() {
+        return mItemOrder;
+    }
+
+    public void setItemOrder(int itemOrder) {
+        mItemOrder = itemOrder;
     }
 }

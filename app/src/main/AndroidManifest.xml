@@ -51,6 +51,14 @@
                 android:name=".EditItemsActivity"
                 android:exported="false"
                 android:label="Login"
+                android:theme="@style/AppTheme" />
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        <activity
+                android:name=".ReOrderItemsActivity"
+                android:exported="false"
+                android:label="Reorder List"
                 android:theme="@style/AppTheme">
             <meta-data
                     android:name="android.app.lib_name"
