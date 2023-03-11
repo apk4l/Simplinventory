@@ -8,11 +8,8 @@
             android:title="Orders History" />
 
     <item
-            android:id="@+id/menu_reorder"
-            android:title="Reorder List" />
-    <item
             android:id="@+id/menu_add"
-            android:title="Add"
-            android:icon="@android:drawable/ic_input_add"
+            android:title="Add List"
+            android:icon="@drawable/addlist"
             app:showAsAction="always" />
 </menu>
