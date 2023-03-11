@@ -71,17 +71,19 @@ public class EditItemsActivity extends AppCompatActivity {
         mContainer.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mContainer.setOrientation(LinearLayout.VERTICAL);
+        mContainer.isScrollContainer();
+        mContainer.setClipChildren(false);
 
 
 
         // Wrap the TableLayout inside a ScrollView
         ScrollView scrollView = new ScrollView(this);
         scrollView.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
+                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        setContentView(scrollView);
         TableLayout tableLayout = new TableLayout(this);
         tableLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.MATCH_PARENT, 10000, 2));
         tableLayout.setStretchAllColumns(true);
 
         // Set the spacing between cells
@@ -197,41 +199,9 @@ public class EditItemsActivity extends AppCompatActivity {
         Volley.newRequestQueue(this).add(request);
 
 // Add the main layout to the container
-        mContainer.addView(tableLayout);
+        scrollView.addView(tableLayout);
     }
 
-    private TableRow createTableRow(String itemName, int isCase, int reqStock, int perCase, String caseName, int itemID) {
-        TableRow row = new TableRow(EditItemsActivity.this);
-        row.setTag(itemID);
-        TextView itemNameTextView = new TextView(EditItemsActivity.this);
-        itemNameTextView.setText(itemName);
-        itemNameTextView.setPadding(0, 10, 0, 50);
-        row.addView(itemNameTextView);
-
-        TextView isCaseTextView = new TextView(EditItemsActivity.this);
-        isCaseTextView.setText(String.valueOf(isCase));
-        isCaseTextView.setPadding(0, 10, 0, 10);
-        row.addView(isCaseTextView);
-
-        TextView reqStockTextView = new TextView(EditItemsActivity.this);
-        reqStockTextView.setText(String.valueOf(reqStock));
-        reqStockTextView.setPadding(0, 10, 0, 10);
-        row.addView(reqStockTextView);
-
-        TextView perCaseTextView = new TextView(EditItemsActivity.this);
-        perCaseTextView.setText(String.valueOf(perCase));
-        perCaseTextView.setPadding(0, 10, 0, 10);
-        row.addView(perCaseTextView);
-
-        TextView caseNameTextView = new TextView(EditItemsActivity.this);
-        caseNameTextView.setText(caseName);
-        caseNameTextView.setPadding(0, 10, 0, 10);
-        row.addView(caseNameTextView);
-
-        row.setGravity(Gravity.CENTER);
-
-        return row;
-    }
     private String getUserId() {
         return getSharedPreferences("MyPrefs", MODE_PRIVATE)
                 .getString("userID", "");
