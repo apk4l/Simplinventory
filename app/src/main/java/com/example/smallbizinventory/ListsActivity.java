@@ -41,6 +41,13 @@ public class ListsActivity extends AppCompatActivity {
                 // Show a dialog to get the new list name from the user
                 showNewListDialog();
                 return true;
+
+            case R.id.menu_user:
+                // Launch the profile activity
+                Intent intent = new Intent(ListsActivity.this, UserActivity.class);
+                intent.putExtra("userID", getUserId());
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -98,7 +105,7 @@ public class ListsActivity extends AppCompatActivity {
     }
 
     // Get the userID from the SharedPreferences
-    private String getUserId() {
+    String getUserId() {
         return getSharedPreferences("MyPrefs", MODE_PRIVATE)
                 .getString("userID", "");
     }

@@ -29,6 +29,43 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity
+                android:name=".UserActivity"
+                android:exported="false"
+                android:label="User Account"
+                android:theme="@style/AppTheme">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
+        <activity
+                android:name=".ChangePasswordActivity"
+                android:exported="false"
+                android:label="Change Password"
+                android:theme="@style/AppTheme">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
+        <activity
+                android:name=".ResetPasswordActivity"
+                android:exported="false"
+                android:label="Reset Password"
+                android:theme="@style/AppTheme">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
+        <activity
+                android:name=".NewPasswordActivity"
+                android:exported="false"
+                android:label="Set New Password"
+                android:theme="@style/AppTheme">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
         <activity
                 android:name=".ListsActivity"
                 android:exported="false"

@@ -44,4 +44,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create Account"/>
+    <TextView
+            android:id="@+id/forgot_pw_textview"
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reset_pw_button"
+            android:text="Forgot Password?:"
+            android:textSize="15dp"
+            android:textColor="@android:color/black"/>
+    <Button
+            android:id="@+id/reset_pw_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset Password"/>
     </LinearLayout>

@@ -29,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button mCreateButton;
 
+    private Button mResetPassButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordEditText = findViewById(R.id.password_edittext);
         mLoginButton = findViewById(R.id.login_button);
         mCreateButton = findViewById(R.id.create_button);
+        mResetPassButton = findViewById(R.id.reset_pw_button);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,8 +108,15 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        mResetPassButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
     }
-    private String hashPassword(String password) {
+    String hashPassword(String password) {
         try {
             // Use SHA-256 hashing algorithm
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
