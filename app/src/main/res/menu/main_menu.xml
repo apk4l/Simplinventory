@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       tools:context="com.example.lolipoptest.MainActivity" >
-    <item
-            android:id="@+id/menu_history"
-            android:title="Orders History" />
-    <item
-            android:id="@+id/menu_user"
-            android:title="Your Account" />
 
     <item
             android:id="@+id/menu_add"
-            android:title="Add List"
             android:icon="@drawable/addlist"
-            app:showAsAction="always" />
+            app:showAsAction="always" android:title="Ass List"/>
+    <item
+            android:id="@+id/menu_user"
+            android:icon="@drawable/profile"
+            app:showAsAction="always" android:title="User Profile"/>
+    <item
+            android:id="@+id/menu_help"
+            android:icon="@drawable/help"
+            app:showAsAction="always" android:title="Help"/>
 </menu>

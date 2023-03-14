@@ -226,6 +226,11 @@ public class EditItemsActivity extends AppCompatActivity {
         reqStockInput.setInputType(InputType.TYPE_CLASS_NUMBER);
         layout.addView(reqStockInput);
 
+        final EditText noteInput = new EditText(this);
+        noteInput.setHint("note (eg. 'set to 0 if under half', 'count sleeves'");
+        layout.addView(noteInput);
+
+
         // Add a radio group for isCase
         final RadioGroup isCaseGroup = new RadioGroup(this);
         final TextView describeIsCase = new TextView(this);
@@ -234,6 +239,7 @@ public class EditItemsActivity extends AppCompatActivity {
 
         final RadioButton isCaseYes = new RadioButton(this);
         isCaseYes.setText("Yes");
+        isCaseYes.setChecked(true);
         isCaseYes.setId(1);
         isCaseGroup.addView(isCaseYes);
 
@@ -257,7 +263,7 @@ public class EditItemsActivity extends AppCompatActivity {
         caseNameInput.setHint("Bulk Name");
         final TextView describeCaseName = new TextView(this);
         describeCaseName.setText("Unit name (cases, bottles, etc.):");
-        caseNameInput.setText("unit");
+        caseNameInput.setText("Unit");
         layout.addView(describeCaseName);
         layout.addView(caseNameInput);
 
@@ -271,12 +277,13 @@ public class EditItemsActivity extends AppCompatActivity {
                 String reqStockStr = reqStockInput.getText().toString();
                 String caseAmountStr = caseAmountInput.getText().toString();
                 String caseName = caseNameInput.getText().toString();
+                String note = noteInput.getText().toString();
 
                 if (!itemName.isEmpty() && !isCase.isEmpty() && !reqStockStr.isEmpty() && !caseAmountStr.isEmpty() && !caseName.isEmpty()) {
                     int reqStock = Integer.parseInt(reqStockStr);
                     int caseAmount = Integer.parseInt(caseAmountStr);
                     int isCaseInt = Integer.parseInt(isCase);
-                    createNewItem(itemName, reqStock, isCaseInt, caseAmount, caseName);
+                    createNewItem(itemName, reqStock, isCaseInt, caseAmount, caseName, note);
                 }
             }
         });
@@ -341,7 +348,7 @@ public class EditItemsActivity extends AppCompatActivity {
             }
         });
     }
-    private void createNewItem(String itemName, int reqStock, int isCase, int perCase, String caseName) {
+    private void createNewItem(String itemName, int reqStock, int isCase, int perCase, String caseName, String note) {
         String url = "https://kentzysk.com/androidinv/new_item.php";
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest request = new StringRequest(Request.Method.POST, url,
@@ -384,6 +391,7 @@ public class EditItemsActivity extends AppCompatActivity {
                 params.put("isCase", String.valueOf(isCase));
                 params.put("perCase", String.valueOf(perCase));
                 params.put("caseName", caseName);
+                params.put("note", note);
                 return params;
             }
         };
@@ -435,7 +443,7 @@ public class EditItemsActivity extends AppCompatActivity {
     }
     private void showEditItemDialog(int itemID) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Edit Item");
+        builder.setTitle("Edit Item:");
 
         // Create the layout for the dialog
         LinearLayout layout = new LinearLayout(this);
@@ -455,6 +463,7 @@ public class EditItemsActivity extends AppCompatActivity {
         EditText reqStockInput = new EditText(this);
         layout.addView(reqStockInput);
 
+
         TextView perCaseLabel = new TextView(this);
         perCaseLabel.setText("Per Case");
         layout.addView(perCaseLabel);
@@ -466,6 +475,7 @@ public class EditItemsActivity extends AppCompatActivity {
         layout.addView(caseNameLabel);
         EditText caseNameInput = new EditText(this);
         layout.addView(caseNameInput);
+
         TextView isCaseLabel = new TextView(this);
         isCaseLabel.setText("Order by Case?");
         layout.addView(isCaseLabel);
@@ -484,6 +494,13 @@ public class EditItemsActivity extends AppCompatActivity {
 
         layout.addView(isCaseGroup);
 
+        TextView noteLabel = new TextView(this);
+        noteLabel.setText("Note");
+        layout.addView(noteLabel);
+        EditText noteInput = new EditText(this);
+        layout.addView(noteInput);
+
+
         // Make a request to the PHP script to get the item details
         String url = "https://kentzysk.com/androidinv/get_item.php?itemID=" + itemID;
         JsonObjectRequest request = new JsonObjectRequest(url, null,
@@ -500,6 +517,7 @@ public class EditItemsActivity extends AppCompatActivity {
                         } else {
                             isCaseNo.setChecked(true);
                         }
+                        noteInput.setText(response.getString("note"));
                     } catch (JSONException e) {
                         Toast.makeText(EditItemsActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
                     }
@@ -519,11 +537,12 @@ public class EditItemsActivity extends AppCompatActivity {
                 String itemName = itemNameInput.getText().toString();
                 int reqStock = Integer.parseInt(reqStockInput.getText().toString());
                 int perCase = Integer.parseInt(perCaseInput.getText().toString());
+                String note = noteInput.getText().toString();
                 String caseName = caseNameInput.getText().toString();
                 int isCase = isCaseYes.isChecked() ? 1 : 0;
 
                 if (!itemName.isEmpty()) {
-                    updateItem(itemID, itemName, isCase, reqStock, perCase, caseName);
+                    updateItem(itemID, itemName, isCase, reqStock, perCase, caseName, note);
                 }
             }
         });
@@ -533,7 +552,7 @@ public class EditItemsActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void updateItem(int itemID, String itemName, int isCase, int reqStock, int perCase, String caseName) {
+    private void updateItem(int itemID, String itemName, int isCase, int reqStock, int perCase, String caseName, String note) {
         String url = "https://kentzysk.com/androidinv/edit_item.php";
 
         // Make a request to the PHP script using Volley
@@ -561,6 +580,7 @@ public class EditItemsActivity extends AppCompatActivity {
                 params.put("reqStock", String.valueOf(reqStock));
                 params.put("perCase", String.valueOf(perCase));
                 params.put("caseName", caseName);
+                params.put("note", note);
                 return params;
             }
         };

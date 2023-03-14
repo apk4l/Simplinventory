@@ -13,4 +13,9 @@
             android:title="Arrange Items"
             android:icon="@drawable/reorder"
             app:showAsAction="always" />
+    <item
+            android:id="@+id/menu_help"
+            android:title="Edit List: Help"
+            android:icon="@drawable/help"
+            app:showAsAction="always" />
 </menu>

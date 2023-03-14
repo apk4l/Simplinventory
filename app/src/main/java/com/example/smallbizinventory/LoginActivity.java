@@ -33,6 +33,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // Hide the title text
+        getSupportActionBar().setDisplayUseLogoEnabled(true); // Show the logo
+        getSupportActionBar().setLogo(R.drawable.logo); // Set the logo image
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         setTitle("Small Biz Inventory");

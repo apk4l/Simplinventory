@@ -48,6 +48,11 @@ public class ListsActivity extends AppCompatActivity {
                 intent.putExtra("userID", getUserId());
                 startActivity(intent);
                 return true;
+            case R.id.menu_help:
+                // Launch the profile activity
+                Intent intents = new Intent(ListsActivity.this, HelpActivity.class);
+                startActivity(intents);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -56,7 +61,10 @@ public class ListsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
-        setTitle("Your Lists");
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // Hide the title text
+        getSupportActionBar().setDisplayUseLogoEnabled(true); // Show the logo
+        getSupportActionBar().setLogo(R.drawable.logo); // Set the logo image
+        setTitle("Small Biz Inventory");
         mListItems = new ArrayList<>();
         mListView = findViewById(R.id.list_view);
 
@@ -254,7 +262,7 @@ public class ListsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            ArrayAdapter<ListItem> adapter = new ArrayAdapter<>(ListsActivity.this,
+             ArrayAdapter<ListItem> adapter = new ArrayAdapter<>(ListsActivity.this,
                     android.R.layout.simple_list_item_1, mListItems);
             mListView.setAdapter(adapter);
         }, error -> Toast.makeText(ListsActivity.this, "Error loading lists", Toast.LENGTH_SHORT).show());

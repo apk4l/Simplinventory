@@ -3,10 +3,13 @@ package com.example.smallbizinventory;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -74,6 +77,7 @@ public class InventoryActivity extends AppCompatActivity {
                     int reqStock = item.getInt("reqStock");
                     int perCase = item.getInt("perCase");
                     String caseName = item.getString("caseName");
+                    String note = item.getString("note");
 
                     // Create a new linear layout to hold the text and edit text fields
                     LinearLayout itemLayout = new LinearLayout(InventoryActivity.this);
@@ -86,9 +90,36 @@ public class InventoryActivity extends AppCompatActivity {
                     textField.setGravity(Gravity.CENTER_HORIZONTAL);
                     itemLayout.addView(textField);
 
+                    // Create a new text field for the note
+                 if (note.length() > 1) {
+                        TextView noteField = new TextView(InventoryActivity.this);
+                        noteField.setText("(" + note + ")");
+                        noteField.setTextSize(11);
+                        noteField.setGravity(Gravity.CENTER_HORIZONTAL);
+                        itemLayout.addView(noteField);
+                    }
+
                     // Create a new edit text field and add it to the linear layout
                     EditText editText = new EditText(InventoryActivity.this);
                     editText.setTag(itemName);
+                    editText.setMaxLines(1);
+                    editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setGravity(Gravity.CENTER); // Set gravity to center
+                    editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                                // Move focus to the next EditText field
+                                View nextEditText = v.focusSearch(View.FOCUS_DOWN);
+                                if (nextEditText != null) {
+                                    nextEditText.requestFocus();
+                                }
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
                     itemLayout.addView(editText);
 
                     // Set the layout parameters for the text view and edit text
@@ -151,9 +182,9 @@ public class InventoryActivity extends AppCompatActivity {
             }
 
             int currentStock = Integer.parseInt(inputText);
-            if (currentStock <= 0) {
-                continue;
-            }
+        //    if (currentStock <= 0) {
+          //      continue;
+           // }
 
             int orderAmount = 0;
             double caseOrder = 0;

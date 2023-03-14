@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
 
@@ -35,7 +35,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Reset Answer" />
-
+    <ImageView
+            android:id="@+id/verification_imageview"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Verification Image"
+            android:src="@drawable/placeholder_image" />
+    <EditText
+            android:id="@+id/verification_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter code from image above" />
     <Button
             android:id="@+id/create_user_button"
             android:layout_width="match_parent"

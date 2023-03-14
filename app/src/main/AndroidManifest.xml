@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.smallbizinventory">
+          package="com.example.smallbizinventory"
+          android:minSdkVersion="14"
+>
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,6 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Main"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,6 +37,15 @@
                 android:name=".UserActivity"
                 android:exported="false"
                 android:label="User Account"
+                android:theme="@style/AppTheme">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
+        <activity
+                android:name=".HelpActivity"
+                android:exported="false"
+                android:label="Help"
                 android:theme="@style/AppTheme">
             <meta-data
                     android:name="android.app.lib_name"
@@ -70,7 +82,7 @@
                 android:name=".ListsActivity"
                 android:exported="false"
                 android:label="Order History"
-                android:theme="@style/AppTheme">
+                android:theme="@style/AppTheme.Main">
             <meta-data
                     android:name="android.app.lib_name"
                     android:value="" />

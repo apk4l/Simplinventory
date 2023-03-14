@@ -2,11 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="16dp">
+              android:orientation="vertical">
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:padding="16dp">
+
+        <TableRow>
+
+            <ImageView
+                    android:id="@+id/account_image"
+                    android:layout_width="101dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/account" />
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/display_username"
+                        android:text="Username"
+                        android:textSize="25dp"
+                        android:textColor="@android:color/black" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/display_email"
+                        android:text="email"
+                        android:textSize="15dp"
+                        android:textColor="@android:color/black" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+    </TableLayout>
+
     <TextView
-            android:id="@+id/change_pass_text"
-            android:layout_width="378dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update Password:"
             android:textSize="25dp"

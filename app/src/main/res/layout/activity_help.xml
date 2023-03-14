@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="378dp"
+            android:layout_height="match_parent">
+    <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:scrollHorizontally="false"
+                  android:padding="16dp">
+    <TextView
+            android:id="@+id/getting_started"
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:text="Getting started:"
+            android:textSize="25dp"
+            android:textColor="@android:color/black"/>
+    <TextView
+            android:id="@+id/getting_started_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:scrollbars="vertical"
+            android:text="Your home page is also your Lists page. To get started, click &quot;Add List&quot; at the top of this page to create your first list. From there, long press your list and click &quot;Edit.&quot; From this screen you can add, edit, delete and rearrange items in your list. When you are ready to run your inventory, simply click on your list."
+            android:textSize="15dp"
+            android:textColor="@android:color/black" />
+    <TextView
+            android:id="@+id/edit_list"
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:text="Edit List:"
+            android:textSize="22dp"
+            android:textColor="@android:color/black"/>
+    <TextView
+            android:id="@+id/edit_list_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:scrollbars="vertical"
+            android:text="Your Edit List page will show you a table with all items in your list and their attributes. You can long press on an item and choose edit to change any of its attributes. If you need to add items to the list, the 'Add Item' button is at the top of the page. In the same area you will also find the 'Reorder List' button, which will allow you to rearrange items in your list in the desired order."
+            android:textSize="15dp"
+            android:textColor="@android:color/black" />
+        <TextView
+                android:id="@+id/add_item"
+                android:layout_width="378dp"
+                android:layout_height="wrap_content"
+                android:text="Add Item:"
+                android:textSize="18dp"
+                android:textColor="@android:color/black"/>
+        <TextView
+                android:id="@+id/add_item_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="40"
+                android:scrollbars="vertical"
+                android:text="From your edit list page, you can begin adding items. You will need to set the following variables: \nITEM NAME\nThe name of your item\nREQUIRED STOCK\nThis would usually be the number of individual units required, but sometimes you may choose to count smaller packs or sleeves etc.\nORDER BY CASE/BULK (Y/N)\nThis is an option to have the SmallBizInventory calculate ordering bulk amounts of items for you when submitting your inventory.\nCASE AMOUNT\nIf you are ordering by bulk/case, set the amount in each case.\nUNIT NAME\nGive a unit name which will appear after your item in your order list. Examples of unit names would be 'bottles', 'cans' if you are ordering indivudal units or 'case', 'box', 'pallet' if you are ordering in bulk.\nADDING A NOTE:\nThis field will add an annotation on your oder page to remind you specifics of how to count an item (i.e. for 12 ounce cups you may want to count sleeves instead of individual cups, so put 'count sleeves' in your note.)"
+                android:textSize="15dp"
+                android:textColor="@android:color/black"/>
+    </LinearLayout>
+    </ScrollView>
+
