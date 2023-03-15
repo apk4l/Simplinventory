@@ -25,6 +25,7 @@ public class EditItemsActivity extends AppCompatActivity {
 
     private ArrayList<InventoryItem> mInventoryItems;
     private LinearLayout mContainer;
+    private TextView helpTextView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +76,6 @@ public class EditItemsActivity extends AppCompatActivity {
         mContainer.setClipChildren(false);
 
 
-
         // Wrap the TableLayout inside a ScrollView
         ScrollView scrollView = new ScrollView(this);
         scrollView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -87,26 +87,52 @@ public class EditItemsActivity extends AppCompatActivity {
         tableLayout.setStretchAllColumns(true);
 
         // Set the spacing between cells
-        int spacing = 5; // in pixels
+        int spacing = 15; // in pixels
         tableLayout.setPadding(spacing, spacing, spacing, spacing);
 
+        // Set the layout weight for each column
+        TableRow.LayoutParams itemNameLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2f);
+        TableRow.LayoutParams isCaseLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+        TableRow.LayoutParams reqStockLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+        TableRow.LayoutParams perCaseLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+        TableRow.LayoutParams caseNameLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
         // Add table headers
         TableRow headerRow = new TableRow(this);
-        TextView itemNameHeader = new TextView(this);
-        TextView isCaseHeader = new TextView(this);
-        TextView reqStockHeader = new TextView(this);
-        TextView perCaseHeader = new TextView(this);
-        TextView caseNameHeader = new TextView(this);
-        itemNameHeader.setText("Item Name");
-        isCaseHeader.setText("Case?");
-        reqStockHeader.setText("Req. Stock");
-        perCaseHeader.setText("Per Case");
-        caseNameHeader.setText("Unit Name");
-        headerRow.addView(itemNameHeader);
-        headerRow.addView(isCaseHeader);
-        headerRow.addView(reqStockHeader);
-        headerRow.addView(perCaseHeader);
-        headerRow.addView(caseNameHeader);
+        TextView itemNameHeaderTextView = new TextView(EditItemsActivity.this);
+        TextView isCaseHeaderTextView = new TextView(EditItemsActivity.this);
+        TextView reqStockHeaderTextView = new TextView(EditItemsActivity.this);
+        TextView perCaseHeaderTextView = new TextView(EditItemsActivity.this);
+        TextView caseNameHeaderTextView = new TextView(EditItemsActivity.this);
+        itemNameHeaderTextView.setText("Item Name");
+        isCaseHeaderTextView.setText("Case?");
+        reqStockHeaderTextView.setText("Req. Stock");
+        perCaseHeaderTextView.setText("Per Case");
+        caseNameHeaderTextView.setText("Unit");
+        isCaseHeaderTextView.setGravity(Gravity.CENTER);
+        reqStockHeaderTextView.setGravity(Gravity.CENTER);
+        perCaseHeaderTextView.setGravity(Gravity.CENTER);
+        caseNameHeaderTextView.setGravity(Gravity.CENTER);
+
+// Set the layout parameters for each cell
+        itemNameHeaderTextView.setPadding(0, 10, 0, 50);
+        itemNameHeaderTextView.setLayoutParams(itemNameLayoutParams);
+        isCaseHeaderTextView.setLayoutParams(isCaseLayoutParams);
+        reqStockHeaderTextView.setLayoutParams(reqStockLayoutParams);
+        perCaseHeaderTextView.setLayoutParams(perCaseLayoutParams);
+        caseNameHeaderTextView.setLayoutParams(caseNameLayoutParams);
+
+
+// Set the weight sum for the header row and the table rows
+        headerRow.setWeightSum(6f);
+
+        // Add the cells to the header row
+        headerRow.addView(itemNameHeaderTextView);
+        headerRow.addView(isCaseHeaderTextView);
+        headerRow.addView(reqStockHeaderTextView);
+        headerRow.addView(perCaseHeaderTextView);
+        headerRow.addView(caseNameHeaderTextView);
+
+
         tableLayout.addView(headerRow);
         // Get the listID from the intent
         int listID = getIntent().getIntExtra("listID", -1);
@@ -136,13 +162,20 @@ public class EditItemsActivity extends AppCompatActivity {
 
                     // Create a new row for the item
                     TableRow row = new TableRow(EditItemsActivity.this);
-                    row.setTag(itemID);
+                    row.setTag(R.id.item_id, itemID);
+                    row.setTag(R.id.item_name, itemName);
                     TextView itemNameTextView = new TextView(EditItemsActivity.this);
                     TextView isCaseTextView = new TextView(EditItemsActivity.this);
                     TextView reqStockTextView = new TextView(EditItemsActivity.this);
                     TextView perCaseTextView = new TextView(EditItemsActivity.this);
                     TextView caseNameTextView = new TextView(EditItemsActivity.this);
-                    itemNameTextView.setTextSize(19);
+                    itemNameTextView.setTextSize(18);
+                    // Set the gravity for each cell
+                    isCaseTextView.setGravity(Gravity.CENTER);
+                    reqStockTextView.setGravity(Gravity.CENTER);
+                    perCaseTextView.setGravity(Gravity.CENTER);
+                    caseNameTextView.setGravity(Gravity.CENTER);
+
                     // Set the text for each cell in the row
                     itemNameTextView.setText(itemName);
                     isCaseTextView.setText(isCase == 1 ? "Y" : "N");
@@ -151,12 +184,8 @@ public class EditItemsActivity extends AppCompatActivity {
                     caseNameTextView.setText(caseName);
 
                     // Set the layout weight for each column
-                    TableRow.LayoutParams itemNameLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2f);
-                    TableRow.LayoutParams isCaseLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-                    TableRow.LayoutParams reqStockLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-                    TableRow.LayoutParams perCaseLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-                    TableRow.LayoutParams caseNameLayoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
 
+                    row.setWeightSum(6f);
                     // Set the layout parameters for each cell
                     itemNameTextView.setPadding(0, 10, 0, 50);
                     itemNameTextView.setLayoutParams(itemNameLayoutParams);
@@ -305,19 +334,20 @@ public class EditItemsActivity extends AppCompatActivity {
         TableRow selectedRow = (TableRow) v;
         Log.d("EditItemsActivity", "selectedRow: " + selectedRow);
         Log.d("EditItemsActivity", "selectedRow tag: " + selectedRow.getTag());
-        int itemID = (int) selectedRow.getTag();
-
-        menu.setHeaderTitle("Item Options");
+        int itemID = (int) selectedRow.getTag(R.id.item_id);
+        String itemName = (String) selectedRow.getTag(R.id.item_name);
+        menu.setHeaderTitle(itemName);
 
         menu.add(Menu.NONE, 0, 0, "Edit").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 // Get the itemID from the tag of the selected row
                 TableRow selectedRow = (TableRow) v;
-                int itemID = (int) selectedRow.getTag();
-
+                // Get the itemID and itemName tags for the row
+                int itemID = (int) selectedRow.getTag(R.id.item_id);
+                String itemName = (String) selectedRow.getTag(R.id.item_name);
                 // Show the edit item dialog
-                showEditItemDialog(itemID);
+                showEditItemDialog(itemID, itemName);
 
                 return true;
             }
@@ -328,7 +358,7 @@ public class EditItemsActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 // Get the itemID from the tag of the selected row
                 TableRow selectedRow = (TableRow) v;
-                int itemID = (int) selectedRow.getTag();
+                int itemID = (int) selectedRow.getTag(R.id.item_id);
 
                 // Show a confirmation dialog
                 new AlertDialog.Builder(EditItemsActivity.this)
@@ -441,9 +471,9 @@ public class EditItemsActivity extends AppCompatActivity {
         };
         queue.add(request);
     }
-    private void showEditItemDialog(int itemID) {
+    private void showEditItemDialog(int itemID, String itemName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Edit Item:");
+        builder.setTitle("Edit Item: " + itemName);
 
         // Create the layout for the dialog
         LinearLayout layout = new LinearLayout(this);

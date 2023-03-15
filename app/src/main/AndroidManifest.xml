@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OrderHistoryActivity"
+            android:name=".OrdersByListActivity"
             android:exported="false"
             android:label="Order History"
             android:theme="@style/AppTheme">
@@ -32,7 +32,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
+        <activity
+                android:name=".OrdersByUserActivity"
+                android:exported="false"
+                android:label="Order History"
+                android:theme="@style/AppTheme">
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value="" />
+        </activity>
         <activity
                 android:name=".UserActivity"
                 android:exported="false"
@@ -117,11 +125,12 @@
                 android:name=".NewUserActivity"
                 android:exported="false"
                 android:label="New User"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme">
             <meta-data
                     android:name="android.app.lib_name"
                     android:value="" />
         </activity>
+
         </application>
 
 

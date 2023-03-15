@@ -2,29 +2,47 @@ package com.example.smallbizinventory;
 
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.View;
+import android.util.Log;
+import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.smallbizinventory.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InventoryActivity extends AppCompatActivity {
 
     private LinearLayout mContainer;
     private ArrayList<InventoryItem> mInventoryItems;
     private TextView mOrderTextView;
+    private int listID;
+
+    private int userID;
+    private String listName;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.inventory_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +50,15 @@ public class InventoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory);
         // Enable the back arrow in the title bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        String listName = getIntent().getStringExtra("listName");
+        listName = getIntent().getStringExtra("listName");
         setTitle("Inventory: " + listName);
         mContainer = findViewById(R.id.container);
         mOrderTextView = findViewById(R.id.order_text_view);
 
 
-
         // Get the listID from the intent
-        int listID = getIntent().getIntExtra("listID", -1);
-
+        listID = getIntent().getIntExtra("listID", -1);
+        userID = getIntent().getIntExtra("userID", -1);
         // Check if the listID is valid
         if (listID == -1) {
             Toast.makeText(this, "Invalid listID", Toast.LENGTH_SHORT).show();
@@ -57,6 +74,49 @@ public class InventoryActivity extends AppCompatActivity {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboard.setText(text);
                 Toast.makeText(InventoryActivity.this, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Button saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the text from the TextView
+                String orderList = mOrderTextView.getText().toString();
+
+// Get the user ID and list ID from wherever you have stored them
+                String userID = getIntent().getStringExtra("userID");
+                int listID = getIntent().getIntExtra("listID", 0);
+
+// Create a request
+                String url = "https://kentzysk.com/androidinv/save_order.php";
+                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                StringRequest request = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Handle the response from the server
+                                Log.d("Volley", "Response: " + response);
+                                Toast.makeText(InventoryActivity.this, "Order saved", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle the error
+                                Log.e("Volley", "Error: " + error.getMessage());
+                                Toast.makeText(InventoryActivity.this, "Error saving order", Toast.LENGTH_SHORT).show();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("userID", userID);
+                        params.put("listID", String.valueOf(listID));
+                        params.put("orderList", orderList);
+                        return params;
+                    }
+                };
+                queue.add(request);
             }
         });
         // Make a request to the PHP script using Volley
@@ -91,7 +151,7 @@ public class InventoryActivity extends AppCompatActivity {
                     itemLayout.addView(textField);
 
                     // Create a new text field for the note
-                 if (note.length() > 1) {
+                    if (note.length() > 1) {
                         TextView noteField = new TextView(InventoryActivity.this);
                         noteField.setText("(" + note + ")");
                         noteField.setTextSize(11);
@@ -182,9 +242,9 @@ public class InventoryActivity extends AppCompatActivity {
             }
 
             int currentStock = Integer.parseInt(inputText);
-        //    if (currentStock <= 0) {
-          //      continue;
-           // }
+            //    if (currentStock <= 0) {
+            //      continue;
+            // }
 
             int orderAmount = 0;
             double caseOrder = 0;
@@ -220,20 +280,43 @@ public class InventoryActivity extends AppCompatActivity {
             String message = TextUtils.join("\n", orderList);
             mOrderTextView.setText(message);  // Update the TextView with the order list
             findViewById(R.id.copy_button).setVisibility(View.VISIBLE); // Show the copy button
+            findViewById(R.id.save_button).setVisibility(View.VISIBLE); // Show the copy button
             mContainer.scrollTo(0, 0); // Scroll to the top of the container
         } else {
             Toast.makeText(this, "No items to order", Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case R.id.menu_history:
+                // Launch the profile activity
+                Intent intent = new Intent(InventoryActivity.this, OrdersByListActivity.class);
+                intent.putExtra("listID", String.valueOf(listID));
+                intent.putExtra("listName",  String.valueOf(listName));
+                startActivity(intent);
+                return true;
+            case R.id.menu_edit:
+                // Launch the profile activity
+                Intent intent2 = new Intent(InventoryActivity.this, EditItemsActivity.class);
+                intent2.putExtra("listID", listID);
+                intent2.putExtra("listName",  String.valueOf(listName));
+                startActivity(intent2);
+                return true;
+            case R.id.menu_help:
+                // Launch the profile activity
+                Intent intents = new Intent(InventoryActivity.this, HelpActivity.class);
+                startActivity(intents);
+                return true;
             case android.R.id.home:
                 // Handle the back arrow click
                 onBackPressed();
                 return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }
+

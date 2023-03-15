@@ -10,11 +10,18 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
             <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Save Order"
+                    android:visibility="gone" />
+            <Button
                     android:id="@+id/copy_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Copy"
                     android:visibility="gone" />
+
             <TextView
                     android:id="@+id/order_text_view"
                     android:layout_width="wrap_content"

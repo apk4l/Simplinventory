@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
@@ -43,6 +44,10 @@ public class NewUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
+        // Enable the back arrow in the title bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setTitle("Create Account");
 
         mUserIDEditText = findViewById(R.id.user_id_edittext);
         mPasswordEditText = findViewById(R.id.password_edittext);
@@ -179,5 +184,14 @@ public class NewUserActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Handle the back arrow click
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

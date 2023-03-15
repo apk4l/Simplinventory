@@ -3,6 +3,7 @@ package com.example.smallbizinventory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +39,7 @@ public class NewPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_password_activity);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mResetCodeEditText = findViewById(R.id.reset_code_edittext);
         mPasswordEditText = findViewById(R.id.password_edittext);
         mConfirmPasswordEditText = findViewById(R.id.confirm_password_edittext);
@@ -123,5 +124,14 @@ public class NewPasswordActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Handle the back arrow click
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

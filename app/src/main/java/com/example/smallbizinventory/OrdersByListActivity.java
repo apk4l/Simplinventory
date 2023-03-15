@@ -18,45 +18,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
-public class OrderHistoryActivity extends AppCompatActivity {
+public class OrdersByListActivity extends AppCompatActivity {
 
 
     private RecyclerView mRecyclerView;
     private OrderListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Order> mOrderList;
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.navigation.main_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_stock:
-                // Handle "Food Stock" menu item click
-                Intent intent = new Intent(OrderHistoryActivity.this, FoodStockActivityOLD.class);
-                startActivity(intent);
-                return true;
-            case R.id.menu_history:
-                // Handle "Order History" menu item click
-
-                return true;
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        String listName = getIntent().getStringExtra("listName");
+        String listID = getIntent().getStringExtra("listID");
+        setTitle("History: " + listName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mRecyclerView = findViewById(R.id.order_list_view);
         mRecyclerView.setHasFixedSize(true);
@@ -68,7 +44,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
         mAdapter = new OrderListAdapter(mOrderList);
         mRecyclerView.setAdapter(mAdapter);
 
-        getOrderHistory();
+        getOrderHistory(listID);
 
     }
 
@@ -76,9 +52,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
 
 
-    private void getOrderHistory() {
+    private void getOrderHistory(String listID) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://inv.thealleypub.com/get_order_history.php";
+        String url = "https://kentzysk.com/androidinv/orders_by_list.php?listID=" + listID;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -86,9 +62,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {   JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                String orderText = jsonArray.getJSONObject(i).getString("order_text");
-                                String orderDate = jsonArray.getJSONObject(i).getString("date");
-                                mOrderList.add(new Order(orderText, orderDate));
+                                String orderList = jsonArray.getJSONObject(i).getString("orderList");
+                                String orderDate = jsonArray.getJSONObject(i).getString("orderDate");
+                                mOrderList.add(new Order(orderList, orderDate));
                             }
                             mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -102,6 +78,16 @@ public class OrderHistoryActivity extends AppCompatActivity {
             }
         });
         queue.add(stringRequest);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Handle the back arrow click
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

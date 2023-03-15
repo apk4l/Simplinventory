@@ -3,6 +3,7 @@ package com.example.smallbizinventory;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AlertDialog;
@@ -27,7 +28,7 @@ public class ListsActivity extends AppCompatActivity {
     private int mLongPressedListId;
 
     private String mLongPressedListName;
-
+private String username;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -41,12 +42,18 @@ public class ListsActivity extends AppCompatActivity {
                 // Show a dialog to get the new list name from the user
                 showNewListDialog();
                 return true;
-
+            case R.id.menu_history:
+                // Launch the profile activity
+                Intent intent = new Intent(ListsActivity.this, OrdersByUserActivity.class);
+                intent.putExtra("userID", getUserId());
+                intent.putExtra("username", getUserName());
+                startActivity(intent);
+                return true;
             case R.id.menu_user:
                 // Launch the profile activity
-                Intent intent = new Intent(ListsActivity.this, UserActivity.class);
-                intent.putExtra("userID", getUserId());
-                startActivity(intent);
+                Intent intent2 = new Intent(ListsActivity.this, UserActivity.class);
+                intent2.putExtra("userID", getUserId());
+                startActivity(intent2);
                 return true;
             case R.id.menu_help:
                 // Launch the profile activity
@@ -104,6 +111,7 @@ public class ListsActivity extends AppCompatActivity {
                 Intent intent = new Intent(ListsActivity.this, InventoryActivity.class);
                 intent.putExtra("listID", listId);
                 intent.putExtra("listName", listName);
+                intent.putExtra("userID", getUserId());
                 startActivity(intent);
             });
         }, error -> Toast.makeText(ListsActivity.this, "Error loading lists", Toast.LENGTH_SHORT).show());
@@ -116,6 +124,9 @@ public class ListsActivity extends AppCompatActivity {
     String getUserId() {
         return getSharedPreferences("MyPrefs", MODE_PRIVATE)
                 .getString("userID", "");
+    }
+    String getUserName() {
+        return getIntent().getStringExtra("username");
     }
 
     // Inner class for the list item
@@ -168,8 +179,8 @@ public class ListsActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_delete:
                 new AlertDialog.Builder(ListsActivity.this)
-                        .setTitle("Delete Item")
-                        .setMessage("Are you sure you want to delete this item?")
+                        .setTitle("Delete List")
+                        .setMessage("Are you sure you want to delete the list '" + mLongPressedListName + "'?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -180,6 +191,13 @@ public class ListsActivity extends AppCompatActivity {
                         .setNegativeButton(android.R.string.no, null)
                         .show();
                 return true;
+            case R.id.menu_history:
+                Intent intent2 = new Intent(ListsActivity.this, OrdersByListActivity.class);
+                intent2.putExtra("listID", String.valueOf(mLongPressedListId));
+                intent2.putExtra("listName", String.valueOf(mLongPressedListName));
+                startActivity(intent2);
+                return true;
+
             default:
                 return super.onContextItemSelected(item);
         }

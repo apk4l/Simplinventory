@@ -2,6 +2,7 @@ package com.example.smallbizinventory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,9 +29,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reset_password_activity);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Reset Password");
         mEmailEditText = findViewById(R.id.email_edittext);
-        mResetCodeEditText = findViewById(R.id.reset_code_edittext);
         mSubmitButton = findViewById(R.id.submit_button);
         mResetPasswordButton = findViewById(R.id.enter_code_button);
 
@@ -87,5 +88,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Handle the back arrow click
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                                     boolean success = json.getBoolean("success");
                                     if (success) {
                                         String userID = json.getString("userID");
+                                        String usernameResponse = json.getString("username");
                                         // Save the login state and userID in SharedPreferences
                                         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -72,7 +73,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                         // Launch the main activity
                                         Intent intent = new Intent(LoginActivity.this, ListsActivity.class);
-                                        intent.putExtra("userID", username);
+                                        intent.putExtra("userID", userID);
+                                        intent.putExtra("username", usernameResponse);
                                         startActivity(intent);
                                         finish();
                                     } else {

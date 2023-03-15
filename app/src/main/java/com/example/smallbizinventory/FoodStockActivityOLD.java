@@ -58,7 +58,7 @@ public class FoodStockActivityOLD extends AppCompatActivity {
                 return true;
             case R.id.menu_history:
                 // Handle "Order History" menu item click
-                Intent intent = new Intent(FoodStockActivityOLD.this, OrderHistoryActivity.class);
+                Intent intent = new Intent(FoodStockActivityOLD.this, OrdersByListActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.login:
